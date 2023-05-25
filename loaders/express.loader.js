@@ -1,25 +1,28 @@
 const express = require("express");
+const settings = require("../config");
 const app = express();
 
+/**
+ * ### Express Initializer
+ * Calling this method will setup Express for this app
+ */
+const ExpressLoader = async () => {
+	try {
+		app.use(express.json());
+		app.use(express.urlencoded({ extended: true }));
 
-const connectAPP = async () => {
+		app.get("/", (req, res) => {
+			res.send("Server Running");
+		});
 
-    try{
-            app.use(express.json());
-            app.use(express.urlencoded({ extended: true }));
+		app.listen(settings.port, () => {
+			console.log(`Server running on port ${settings.port}.`);
+		});
 
-            app.get("/", (req, res) => {
-              res.send("Server Running");
-            });
-
-            // console.log()
-
-    } catch (err){
-        console.log(err);
-    }
+	} catch (err) {
+		console.error(err);
+	}
 
 };
 
-module.exports = connectAPP;
-
-
+module.exports = ExpressLoader;

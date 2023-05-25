@@ -1,18 +1,22 @@
-require("dotenv").config();
 const mongoose = require("mongoose");
+const settings = require("../config");
 
-const connectDB = async () => {
-  try {
-    mongoose.set("strictQuery", false);
-    const connect = await mongoose.connect(process.env.DB_URL, {
-      useNewUrlParser: true,
-    });
+/**
+ * ## MongoDB Initializer
+ * Calling this method will setup the Mongo connection
+ */
+const MongoLoader = async () => {
+	try {
+		mongoose.set("strictQuery", false); // What does this do? @Daniel
+		const connect = await mongoose.connect(settings.mongo_url, {
+			useNewUrlParser: true,
+		});
 
-    console.log("MongoDB connected: ", connect.connection.host);
-  } catch (err) {
-    console.log(err);
-    process.exit(1);
-  }
+		console.log("MongoDB connected: ", connect.connection.host);
+	} catch (err) {
+		console.error(err);
+		process.exit(1);
+	}
 };
 
-module.exports = connectDB;
+module.exports = MongoLoader;

@@ -1,21 +1,16 @@
 const connectAPP = require("./express.loader.js");
 const connectDB = require("./mongoose.loader.js");
-const express = require("express");
-const app = express();
 
-const port = process.env.ACCESS_PORT;
+/**
+ * ## Start up Server
+ * This function connects both the server and the database
+ */
 const connectSERVER = async() => {
     try{
         connectAPP();
         connectDB();
-
-        app.listen(port, () => {
-          console.log(`Server running on port ${port}.`);
-        });
-        console.log('Server Connect Successful');
-
     } catch(err){
-        console.log(err);
+        console.error(err);
     }
 };
 
