@@ -1,5 +1,6 @@
 const express = require("express");
 const settings = require("../config");
+const benefactorRoute = require("../services/beneficiaries/routes/benefactor.route");
 const app = express();
 
 /**
@@ -11,14 +12,10 @@ const ExpressLoader = async () => {
 		app.use(express.json());
 		app.use(express.urlencoded({ extended: true }));
 
-		app.get("/", (req, res) => {
-			res.send("Server Running");
-		});
+		benefactorRoute(app);
 
-		app.listen(settings.port, () => {
-			console.log(`Server running on port ${settings.port}.`);
-		});
-
+		// App running
+		app.listen(settings.port, () => console.log(`Server running on port ${settings.port}...`));
 	} catch (err) {
 		console.error(err);
 	}
