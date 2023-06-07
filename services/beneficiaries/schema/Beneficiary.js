@@ -11,6 +11,19 @@ const BeneficiarySchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  isTrustee: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("Benefitiary", BeneficiarySchema);

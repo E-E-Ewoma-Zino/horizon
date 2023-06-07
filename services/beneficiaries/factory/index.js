@@ -1,0 +1,1 @@
+const data = require("../dao/index");
