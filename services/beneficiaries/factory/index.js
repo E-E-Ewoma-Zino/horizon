@@ -2,6 +2,7 @@ const BeneficiaryDAO = require("../dao");
 const ERROR = require("../../../constants/error.constant");
 const STATUS = require("../../../constants/status.constants");
 const generalEmmiter = require("../../notification/listeners");
+const { exist } = require("joi");
 
 /**
  * ### Beneficiaries Factory
@@ -35,7 +36,7 @@ exports.create_beneficiary_factory = async (data) => {
 
 /**
  * ### Beneficiaries Factory
- * Use this method to create a new beneficiary 
+ * Use this method to Get a Beneficiary by ID
  */
 exports.get_beneficiary_factory = async (data) => {
 	try {
@@ -87,3 +88,51 @@ exports.update_beneficiary_factory = async (data) => {
 		return ERROR(error);
 	}
 }
+
+
+/**
+ * ### Beneficiaries Factory
+ * Use this method to delete a beneficiary
+ * Note: Request data must contain _id 
+ * @example delete_beneficiary({...otherData, _id: "23237778a99c22c282ae8"});
+ */
+
+exports.delete_beneficiary_factory = async (id) => {
+    try {
+        const result = await BeneficiaryDAO.remove(id);
+        if(!result) throw {
+            status: STATUS.NOT_FOUND_404,
+            error: "NOT FOUND",
+            message: "User does not exist: " +id,
+            result
+        } 
+        return {
+            status: STATUS.OK_200,
+            message: "User Successfully Deleted",
+            result
+        }
+        
+    } catch (error) {
+            return ERROR(error);
+    }
+}
+
+exports.get_all_beneficiary_factory = async (user) => {
+    try{
+        const result =  await BeneficiaryDAO.findAllByUser(user);
+        if(!result) throw {
+            status: STATUS.NOT_FOUND_404,
+            error: "NOT FOUND",
+            message: "No Beneficiaries associated with this user: " +user,
+            result
+        } 
+        return {
+            status: STATUS.OK_200,
+            message: "All Beneficiaries: ",
+            result 
+        }
+    } catch(err){
+        return ERROR(err);
+    }
+}
+

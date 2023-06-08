@@ -71,32 +71,34 @@ exports.verify_create_beneficiary = (req, res, next) => {
  * Validate the beneficiary before updateing it
  */
 exports.verify_update_beneficiary = (req, res, next) => {
-	try {
-		const schema = Joi.object().keys({
-			name: Joi.string(),
-			email: Joi.string().email(),
-			isTrustee: Joi.boolean(),
-			_id: Joi.string().alphanum().required()
-		});
+  try {
+    const schema = Joi.object().keys({
+      name: Joi.string(),
+      email: Joi.string().email(),
+      isTrustee: Joi.boolean(),
+      _id: Joi.string().alphanum().required(),
+    });
 
-		const input = {
-			...req.body,
-			_id: req.params.id
-		}
+    const input = {
+      ...req.body,
+      _id: req.params.id,
+    };
 
-		const {error, value} = schema.validate(input);
+    const { error, value } = schema.validate(input);
 
-		if(error) throw {
-			status: STATUS.BAD_REQUEST_400,
-			message: "Please check the inputed information and try again!",
-			error_code: "V403VCB",
-			err: error,
-			result: null
-		}
+    if (error)
+      throw {
+        status: STATUS.BAD_REQUEST_400,
+        message: "Please check the inputed information and try again!",
+        error_code: "V403VCB",
+        err: error,
+        result: null,
+      };
 
-		req.body = value;
-		return next();
-	}catch(err) {
-		return res.status(err.status || 500).json(ERROR(err));
-	}
+    req.body = value;
+    return next();
+  } catch (err) {
+    return res.status(err.status || 500).json(ERROR(err));
+  }
+  
 }
