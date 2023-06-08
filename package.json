@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@alicloud/pop-core": "^1.7.13",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-flash": "^0.0.2",
@@ -14,7 +15,6 @@
   "name": "horizon_backend",
   "version": "1.0.0",
   "main": "app.js",
-  "devDependencies": {},
   "scripts": {
     "test": "nodemon index.js",
     "start": "node index.js"

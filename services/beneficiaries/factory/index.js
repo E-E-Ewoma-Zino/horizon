@@ -23,7 +23,7 @@ exports.create_beneficiary_factory = async (data) => {
 
 		return {
 			status: STATUS.CREATED_201,
-			message: "Successfully created invoice",
+			message: "Successfully created beneficiary",
 			error: null,
 			result
 		}
@@ -50,7 +50,7 @@ exports.get_beneficiary_factory = async (data) => {
 
 		return {
 			status: STATUS.OK_200,
-			message: "Successfully created invoice",
+			message: "Successfully found beneficiary",
 			error: null,
 			result
 		}
@@ -78,10 +78,10 @@ exports.update_beneficiary_factory = async (data) => {
 			result
 		}
 		return {
-			result: result,
 			error: null,
 			status: STATUS.OK_200,
-			message: "Successfully updated invoice"
+			message: "Successfully updated beneficiary",
+			result: result
 		}
 	} catch (error) {
 		return ERROR(error);

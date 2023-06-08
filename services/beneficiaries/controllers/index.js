@@ -7,7 +7,7 @@ const { create_beneficiary_factory, update_beneficiary_factory, get_beneficiary_
  */
 exports.create_beneficiary = async (req, res) => {
 	const { status, ...more } = await create_beneficiary_factory(req.body);
-	res.status(status).json({ status, more });
+	res.status(status).json({ status, ...more });
 }
 
 /**
@@ -17,7 +17,7 @@ exports.create_beneficiary = async (req, res) => {
  */
 exports.update_beneficiary = async (req, res) => {
 	const { status, ...more } = await update_beneficiary_factory(req.body);
-	res.status(status).json({ status, more });
+	res.status(status).json({ status, ...more });
 }
 
 /**
@@ -27,5 +27,5 @@ exports.update_beneficiary = async (req, res) => {
  */
 exports.get_beneficiary = async (req, res) => {
 	const { status, ...more } = await get_beneficiary_factory(req.body);
-	res.status(status).json({ status, more });
+	res.status(status).json({ status, ...more });
 }
