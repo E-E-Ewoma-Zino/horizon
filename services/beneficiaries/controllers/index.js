@@ -54,6 +54,6 @@ exports.delete_beneficiary =  async (req,res) => {
  */
 
 exports.get_all_beneficiary = async (req, res) => {
-	const {status, ...more } = await get_all_beneficiary_factory(req.params.id);
+	const {status, ...more } = await get_all_beneficiary_factory(req.body);
 	res.status(status).json({status, ...more});
 }

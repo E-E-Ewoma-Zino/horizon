@@ -10,7 +10,7 @@ const STATUS = require("../../../constants/status.constants");
 exports.verifyId = (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
-			_id: Joi.string().alphanum().required()
+			_id: Joi.string().alphanum().required() 
 		});
 
 		const input = {
@@ -100,5 +100,5 @@ exports.verify_update_beneficiary = (req, res, next) => {
   } catch (err) {
     return res.status(err.status || 500).json(ERROR(err));
   }
-  
+
 }
