@@ -1,52 +1,32 @@
 const mongoose = require('mongoose');
 
 const AssetSchema = new mongoose.Schema({
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  assetType: {
-    type: String,
-    enum: ["bankAccount", "crypto", "realEstate", "Others"],
-    required: true,
-  },
-  assetName: {
-    type: String,
-  },
-  assetValue: {
-    type: String,
-  },
-  bank_account_name: {
-    type: String,
-  },
-  crypto_wallet_type: {
-    type: String,
-  },
-  crytocurrency: {
-    type: String,
-  },
-  crypto_address: {
-    type: String,
-  },
-  crypto_api_key: {
-    type: String,
-  },
-  crypto_api_secret: {
-    type: String,
-  },
-  crypto_file: {
-    type: String,
-    //buffer?
-  },
-  realEstate_addess: {
-    type: String,
-  },
-  // realEstate_value: {
-  //   type: String,
-  // },
-  realEstate_file: {
-    type: String,
-  },
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "user",
+		required: true,
+	},
+	typeOf: {
+		type: String,
+		enum: ["bankAccount", "crypto", "realEstate", "Others"],
+		required: true,
+	},
+	name: String,
+	value: String,
+	bank_account_name: String,
+	crypto_wallet_type: String,
+	crytocurrency: String,
+	crypto_address: String,
+	crypto_api_key: String,
+	crypto_api_secret: String,
+	crypto_file: Object,
+	realEstate_addess: String,
+	// realEstate_value: {
+	//   type: String,
+	// },
+	realEstate_file: {
+		type: String,
+	}
+}, {timestamps: true});
 
-});
+module.exports = mongoose.model("asset", AssetSchema);

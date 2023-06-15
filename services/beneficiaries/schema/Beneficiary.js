@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const BeneficiarySchema = new mongoose.Schema({
 	user_id: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "User",
+		ref: "user",
 		// required: true,
 	},
 	name: {
@@ -21,4 +21,4 @@ const BeneficiarySchema = new mongoose.Schema({
 	},
 });
 
-module.exports = mongoose.model("Beneficiary", BeneficiarySchema);
+module.exports = mongoose.model("beneficiary", BeneficiarySchema);

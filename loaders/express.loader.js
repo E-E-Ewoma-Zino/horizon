@@ -1,6 +1,7 @@
 const express = require("express");
 const settings = require("../config");
-const benefactorRoute = require("../services/beneficiaries/routes/benefactor.route");
+const benefactorRoutes = require("../services/beneficiaries/routes/benefactor.routes");
+const liabilityRoutes = require("../services/investment/routes/liability.routes");
 const app = express();
 
 /**
@@ -12,7 +13,9 @@ const ExpressLoader = async () => {
 		app.use(express.json());
 		app.use(express.urlencoded({ extended: true }));
 
-		benefactorRoute(app);
+		// 
+		benefactorRoutes(app);
+		liabilityRoutes(app);
 
 		// App running
 		app.listen(settings.port, () => console.log(`Server running on port ${settings.port}...`));

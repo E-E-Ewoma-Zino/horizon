@@ -18,7 +18,7 @@ exports.create_beneficiary_factory = async (data) => {
 			message: "Failed to create Beneficiary",
 			result
 		}
-        
+
 
 		// if Successfully create send mail to beneficiary
 		generalEmmiter.emit("new_benefactor", result);
@@ -33,7 +33,6 @@ exports.create_beneficiary_factory = async (data) => {
 		return ERROR(error);
 	}
 }
-
 
 /**
  * ### Beneficiaries Factory
@@ -61,7 +60,6 @@ exports.get_beneficiary_factory = async (data) => {
 	}
 }
 
-
 /**
  * ### Beneficiaries Factory
  * Use this method to update beneficiary
@@ -69,7 +67,7 @@ exports.get_beneficiary_factory = async (data) => {
  * @example update_beneficiary({...otherData, _id: "23237778a99c22c282ae8"});
  */
 exports.update_beneficiary_factory = async (data) => {
-	const {_id, ...others} = data;
+	const { _id, ...others } = data;
 	try {
 		const result = await BeneficiaryDAO.update(_id, others);
 
@@ -90,7 +88,6 @@ exports.update_beneficiary_factory = async (data) => {
 	}
 }
 
-
 /**
  * ### Beneficiaries Factory
  * Use this method to delete a beneficiary
@@ -99,41 +96,40 @@ exports.update_beneficiary_factory = async (data) => {
  */
 
 exports.delete_beneficiary_factory = async (id) => {
-    try {
-        const result = await BeneficiaryDAO.remove(id);
-        if(!result) throw {
-            status: STATUS.NOT_FOUND_404,
-            error: "NOT FOUND",
-            message: "User does not exist: " +id,
-            result
-        } 
-        return {
-            status: STATUS.OK_200,
-            message: "User Successfully Deleted",
-            result
-        }
-        
-    } catch (error) {
-            return ERROR(error);
-    }
+	try {
+		const result = await BeneficiaryDAO.remove(id);
+		if (!result) throw {
+			status: STATUS.NOT_FOUND_404,
+			error: "NOT FOUND",
+			message: "User does not exist: " + id,
+			result
+		}
+		return {
+			status: STATUS.OK_200,
+			message: "User Successfully Deleted",
+			result
+		}
+
+	} catch (error) {
+		return ERROR(error);
+	}
 }
 
 exports.get_all_beneficiary_factory = async (user) => {
-    try{
-        const result =  await BeneficiaryDAO.findAllByUser(user);
-        if(!result) throw {
-            status: STATUS.NOT_FOUND_404,
-            error: "NOT FOUND",
-            message: "No Beneficiaries associated with this user: " +user,
-            result
-        } 
-        return {
-            status: STATUS.OK_200,
-            message: "All Beneficiaries: ",
-            result 
-        }
-    } catch(err){
-        return ERROR(err);
-    }
+	try {
+		const result = await BeneficiaryDAO.findAllByUser(user);
+		if (!result) throw {
+			status: STATUS.NOT_FOUND_404,
+			error: "NOT FOUND",
+			message: "No Beneficiaries associated with this user: " + user,
+			result
+		}
+		return {
+			status: STATUS.OK_200,
+			message: "All Beneficiaries: ",
+			result
+		}
+	} catch (err) {
+		return ERROR(err);
+	}
 }
-
