@@ -18,6 +18,7 @@ exports.create_beneficiary_factory = async (data) => {
 			message: "Failed to create Beneficiary",
 			result
 		}
+        
 
 		// if Successfully create send mail to beneficiary
 		generalEmmiter.emit("new_benefactor", result);
