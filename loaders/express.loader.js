@@ -2,6 +2,8 @@ const express = require("express");
 const settings = require("../config");
 const benefactorRoutes = require("../services/beneficiaries/routes/benefactor.routes");
 const liabilityRoutes = require("../services/investment/routes/liability.routes");
+const assetRoutes = require('../services/investment/routes/asset.routes');
+
 const app = express();
 
 /**
@@ -16,6 +18,7 @@ const ExpressLoader = async () => {
 		// 
 		benefactorRoutes(app);
 		liabilityRoutes(app);
+		assetRoutes(app);
 
 		// App running
 		app.listen(settings.port, () => console.log(`Server running on port ${settings.port}...`));
