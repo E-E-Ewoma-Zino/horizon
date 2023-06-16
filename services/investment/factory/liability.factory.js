@@ -95,12 +95,12 @@ exports.delete_liability_factory = async (id) => {
 		if (!result) throw {
 			status: STATUS.NOT_FOUND_404,
 			error: "NOT FOUND",
-			message: "User does not exist: " + id,
+			message: "Liability does not exist: " + id,
 			result
 		}
 		return {
 			status: STATUS.OK_200,
-			message: "User Successfully Deleted",
+			message: "Liability Successfully Deleted",
 			result
 		}
 
