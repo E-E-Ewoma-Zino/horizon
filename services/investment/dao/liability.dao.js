@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 class LiabilityDAO {
 	constructor() {
 		this.liability = require("../schema/Liability");
+		this.options = { new: true };
 	}
 
 	async create(data) {
@@ -19,7 +20,7 @@ class LiabilityDAO {
 	}
 	
 	async update(id, data) {
-		return await this.liability.findOneAndUpdate(new mongoose.Types.ObjectId(id), data);
+		return await this.liability.findOneAndUpdate(new mongoose.Types.ObjectId(id), data, this.options);
 	}
 	
 	async remove(id) {
@@ -27,7 +28,7 @@ class LiabilityDAO {
 	}
 	
 	async findAllByUser(user) {
-		return await this.liability.find({user_id: user});
+		return await this.liability.find(user);
 	}
 }
 

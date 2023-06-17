@@ -4,16 +4,19 @@ const benefactorRoutes = require("../services/beneficiaries/routes/benefactor.ro
 const liabilityRoutes = require("../services/investment/routes/liability.routes");
 const assetRoutes = require('../services/investment/routes/asset.routes');
 
-const app = express();
 
 /**
  * ### Express Initializer
  * Calling this method will setup Express for this app
- */
+*/
 const ExpressLoader = async () => {
 	try {
+		const app = express();
+		app.use(express.urlencoded({
+			extended: true,
+			type: 'application/x-www-form-urlencoded'
+		}));
 		app.use(express.json());
-		app.use(express.urlencoded({ extended: true }));
 
 		// 
 		benefactorRoutes(app);
@@ -25,7 +28,6 @@ const ExpressLoader = async () => {
 	} catch (err) {
 		console.error(err);
 	}
-
 };
 
 module.exports = ExpressLoader;

@@ -22,14 +22,11 @@ const AssetSchema = new mongoose.Schema({
 	crypto_address: String,
 	crypto_api_key: String,
 	crypto_api_secret: String,
-	crypto_file: Object,
+	file: Object,
 	realEstate_addess: String,
 	// realEstate_value: {
 	//   type: String,
-	// },
-	realEstate_file: {
-		type: String,
-	}
+	// }
 }, {timestamps: true});
 
 module.exports = mongoose.model("asset", AssetSchema);
