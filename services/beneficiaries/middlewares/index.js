@@ -23,7 +23,40 @@ exports.verifyId = (req, res, next) => {
 			status: STATUS.BAD_REQUEST_400,
 			message: "Please check the inputed information and try again!",
 			error_code: "V403VID",
-			err: error,
+			error: error,
+			result: null
+		}
+
+		req.body = value;
+		return next();
+	} catch (err) {
+		return res.status(err.status || STATUS.SERVER_ERR_500).json(ERROR(err));
+	}
+}
+
+/**
+ * ### Beneficiaries Middleware
+ * #### Verify Params user id and query
+ * Validate the user id before using it
+ */
+exports.verify_get_all_user_beneficiary = (req, res, next) => {
+	try {
+		const schema = Joi.object().keys({
+			user: Joi.string().alphanum().required()
+		}).unknown(true);
+
+		const input = {
+			user: req.params.id,
+			...req.query
+		}
+
+		const { error, value } = schema.validate(input);
+
+		if (error) throw {
+			status: STATUS.BAD_REQUEST_400,
+			message: "Please check the inputed information and try again!",
+			error_code: "V403VID",
+			error: error,
 			result: null
 		}
 
@@ -44,16 +77,22 @@ exports.verify_create_beneficiary = (req, res, next) => {
 		const schema = Joi.object().keys({
 			name: Joi.string().required(),
 			email: Joi.string().email().required(),
+			user: Joi.string().required(),
 			isTrustee: Joi.boolean()
 		});
 
-		const { error, value } = schema.validate(req.body);
+		const input = {
+			// This user will change to req.user
+			user: req.body.user,
+			...req.body
+		}
+		const { error, value } = schema.validate(input);
 
 		if (error) throw {
 			status: STATUS.BAD_REQUEST_400,
 			message: "Please check the inputed information and try again!",
 			error_code: "V403VCB",
-			err: error,
+			error: error,
 			result: null
 		}
 
@@ -90,7 +129,7 @@ exports.verify_update_beneficiary = (req, res, next) => {
 				status: STATUS.BAD_REQUEST_400,
 				message: "Please check the inputed information and try again!",
 				error_code: "V403VUB",
-				err: error,
+				error: error,
 				result: null,
 			};
 

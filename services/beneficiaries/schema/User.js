@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        account: {
+        accountNo: {
             type: Number,
             required: true,
         }

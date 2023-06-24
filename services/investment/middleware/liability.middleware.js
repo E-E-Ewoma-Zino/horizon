@@ -23,7 +23,7 @@ exports.verifyId = (req, res, next) => {
 			status: STATUS.BAD_REQUEST_400,
 			message: "Please check the inputed information and try again!",
 			error_code: "V403VID",
-			err: error,
+			error: error,
 			result: null
 		}
 
@@ -64,7 +64,7 @@ exports.verify_create_liability = (req, res, next) => {
 			status: STATUS.BAD_REQUEST_400,
 			message: "Please check the inputed information and try again!",
 			error_code: "V403VCL",
-			err: error,
+			error: error,
 			result: null
 		}
 
@@ -83,7 +83,7 @@ exports.verify_create_liability = (req, res, next) => {
 exports.verify_update_liability = (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
-			user: Joi.string().alphanum().required(),
+			_id: Joi.string().alphanum().required(),
 			typeOf: Joi.string().required(),
 			balance: Joi.number().required(),
 			paymentBalance: Joi.number().required(),
@@ -97,6 +97,7 @@ exports.verify_update_liability = (req, res, next) => {
 		// add user: req.userId after user Auth is made
 		const input = {
 			...req.body,
+			_id: req.params.id,
 			document: req.files
 		}
 
@@ -107,9 +108,42 @@ exports.verify_update_liability = (req, res, next) => {
 				status: STATUS.BAD_REQUEST_400,
 				message: "Please check the inputed information and try again!",
 				error_code: "V403VUL",
-				err: error,
+				error: error,
 				result: null,
 			};
+
+		req.body = value;
+		return next();
+	} catch (err) {
+		return res.status(err.status || STATUS.SERVER_ERR_500).json(ERROR(err));
+	}
+}
+
+/**
+ * ### Liabilities Middleware
+ * #### Verify Params user id and query
+ * Validate the user id before using it
+ */
+exports.verify_get_all_user_liabilities = (req, res, next) => {
+	try {
+		const schema = Joi.object().keys({
+			user: Joi.string().alphanum().required()
+		}).unknown(true);
+
+		const input = {
+			user: req.params.id,
+			...req.query
+		}
+
+		const { error, value } = schema.validate(input);
+
+		if (error) throw {
+			status: STATUS.BAD_REQUEST_400,
+			message: "Please check the inputed information and try again!",
+			error_code: "V403VID",
+			error: error,
+			result: null
+		}
 
 		req.body = value;
 		return next();

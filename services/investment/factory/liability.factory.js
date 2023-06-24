@@ -95,12 +95,13 @@ exports.delete_liability_factory = async (id) => {
 		if (!result) throw {
 			status: STATUS.NOT_FOUND_404,
 			error: "NOT FOUND",
-			message: "User does not exist: " + id,
+			message: "Liability does not exist: " + id,
 			result
 		}
 		return {
 			status: STATUS.OK_200,
-			message: "User Successfully Deleted",
+			message: "Liability Successfully Deleted",
+			error: null,
 			result
 		}
 
@@ -109,18 +110,19 @@ exports.delete_liability_factory = async (id) => {
 	}
 }
 
-exports.get_all_liability_factory = async (user) => {
+exports.get_all_liability_factory = async (data) => {
 	try {
-		const result = await liabilityDao.findAllByUser(user);
+		const result = await liabilityDao.findAllByUser(data);
 		if (!result) throw {
 			status: STATUS.NOT_FOUND_404,
 			error: "NOT FOUND",
-			message: "No Liabilities associated with this user: " + user,
+			message: "No Liabilities associated with this user: " + data.user,
 			result
 		}
 		return {
 			status: STATUS.OK_200,
-			message: "All Liabilities: ",
+			message: `Found ${result.length} Liabilities`,
+			error: null,
 			result
 		}
 	} catch (err) {

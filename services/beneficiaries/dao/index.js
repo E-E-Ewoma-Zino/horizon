@@ -8,26 +8,32 @@ const mongoose = require("mongoose");
 class BeneficiaryDAO {
 	constructor() {
 		this.beneficiary = require("../schema/Beneficiary");
+		this.user = require("../schema/User");
+		this.options = { new: true };
+	}
+
+	async createUser(data) {
+		return await this.user.create(data);
 	}
 
 	async create(data) {
 		return await this.beneficiary.create(data);
 	}
-	
+
 	async findById(id) {
 		return await this.beneficiary.findById(id);
 	}
-	
+
 	async update(id, data) {
-		return await this.beneficiary.findOneAndUpdate(new mongoose.Types.ObjectId(id), data);
+		return await this.beneficiary.findOneAndUpdate(new mongoose.Types.ObjectId(id), data, this.options);
 	}
-	
+
 	async remove(id) {
-		return await this.beneficiary.findByIdAndDelete(id);
+		return await this.beneficiary.findByIdAndDelete(id, this.options);
 	}
-	
-	async findAllByUser(user) {
-		return await this.beneficiary.find({user_id: user});
+
+	async findAllByUser(data) {
+		return await this.beneficiary.find(data);
 	}
 }
 

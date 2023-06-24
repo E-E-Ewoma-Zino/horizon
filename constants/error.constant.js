@@ -9,8 +9,8 @@ const ERROR = (error) => {
 		status: error.status || STATUS.SERVER_ERR_500,
 		alert: error.alert || ALERTS.DANGER,
 		...error,
-		message: error.err ? error.message : "An unknown error occured",
-		err: error.err || error.message,
+		message: error.error ? error.message : "An unknown error occured",
+		error: error.error || error.message,
 		result: error.result || null
 	}
 }
