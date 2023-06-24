@@ -13,6 +13,7 @@ const AssetSchema = new mongoose.Schema({
 	},
 	name: String,
 	value: String,
+	currency_type: String,
 	bank_account_name: String,
   bank_account_number: String,
   bank_bvn_number: String,

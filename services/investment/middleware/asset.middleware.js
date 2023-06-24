@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const Converter = require("currency-converter-lt");
 const ERROR = require("../../../constants/error.constant");
 const STATUS = require("../../../constants/status.constants");
 
@@ -38,21 +39,22 @@ exports.verifyId = (req, res, next) => {
 exports.verify_general_create_asset = (req, res, next) => {
 	try {
 		const schema = Joi.object({
-			user: Joi.string().alphanum().required(),
-			typeOf: Joi.string().required(),
-			value: Joi.number(),
-			bank_bvn_number: Joi.number(),
-			bank_account_number: Joi.number(),
-			bank_account_name: Joi.string(),
-			bank_name: Joi.string(),
-			crypto_wallet_type: Joi.string(),
-			crytocurrency: Joi.string(),
-			crypto_address: Joi.string(),
-			crypto_api_key: Joi.string().alphanum(),
-			crypto_api_secret: Joi.string().alphanum(),
-			realEstate_addess: Joi.string(),
-			file: Joi.object()
-		});
+      user: Joi.string().alphanum().required(),
+      typeOf: Joi.string().required(),
+      value: Joi.number(),
+      currency_type: Joi.string(),
+      bank_bvn_number: Joi.number(),
+      bank_account_number: Joi.number(),
+      bank_account_name: Joi.string(),
+      bank_name: Joi.string(),
+      crypto_wallet_type: Joi.string(),
+      crytocurrency: Joi.string(),
+      crypto_address: Joi.string(),
+      crypto_api_key: Joi.string().alphanum(),
+      crypto_api_secret: Joi.string().alphanum(),
+      realEstate_addess: Joi.string(),
+      file: Joi.object(),
+    });
 
 		const input = {
 			...req.body,
@@ -83,6 +85,7 @@ exports.verify_general_asset_update = (req, res, next) => {
 		const schema = Joi.object({
 			_id: Joi.string().alphanum(),
 			value: Joi.number(),
+			currency_type: Joi.string(),
 			bank_bvn_number: Joi.number(),
 			bank_account_number: Joi.number(),
 			bank_account_name: Joi.string(),
@@ -153,3 +156,40 @@ exports.verify_get_all_user_asset = (req, res, next) => {
 		return res.status(err.status || STATUS.SERVER_ERR_500).json(ERROR(err));
 	}
 }
+
+//Currency Convertor
+exports.currencyConverter = async (req, res, next) => {
+  // Check if the request contains the necessary data for currency conversion
+  if (req.body.currency_type && req.body.value) {
+    const currency_type = req.body.currency_type;
+    const value = req.body.value;
+
+    try {
+      let convertedAmount;
+	  const converter = new Converter();
+
+      // Perform currency conversion based on the currency type
+      if (currency_type === "USD") {
+        // Convert USD to cents
+        const result = await converter.convert(value).from("USD").to("cents");
+        convertedAmount = result.value;
+      } else if (currency_type === "NGN") {
+        // Convert NAIRA to kobo
+        const result = await converter.convert(value).from("NGN").to("kobo");
+        convertedAmount = result.value;
+      } else {
+        // Invalid currency type
+        return res.status(400).json({ error: "Invalid currency type" });
+      }
+
+      // Update the request body with the converted amount
+      req.body.value = convertedAmount;
+    } catch (error) {
+      // Handle any errors from the currency conversion library
+      return res.status(500).json({ error: "Currency conversion failed" });
+    }
+  }
+
+  // Proceed to the next middleware or route handler
+  return next();
+};
