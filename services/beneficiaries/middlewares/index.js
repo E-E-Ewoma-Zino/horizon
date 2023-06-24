@@ -78,6 +78,7 @@ exports.verify_create_beneficiary = (req, res, next) => {
 			name: Joi.string().required(),
 			email: Joi.string().email().required(),
 			user: Joi.string().required(),
+			phone: Joi.string(),
 			isTrustee: Joi.boolean()
 		});
 
@@ -111,15 +112,15 @@ exports.verify_create_beneficiary = (req, res, next) => {
 exports.verify_update_beneficiary = (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
-			name: Joi.string(),
-			email: Joi.string().email(),
 			isTrustee: Joi.boolean(),
+			user: Joi.string().alphanum().required(),
 			_id: Joi.string().alphanum().required(),
 		});
 
 		const input = {
-			...req.body,
-			_id: req.params.id,
+			isTrustee: req.body.isTrustee,
+			user: req.body.user,
+			_id: req.params.id
 		};
 
 		const { error, value } = schema.validate(input);

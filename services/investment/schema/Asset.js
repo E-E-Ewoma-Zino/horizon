@@ -12,14 +12,14 @@ const AssetSchema = new mongoose.Schema({
 		required: true,
 	},
 	name: String,
-	value: String,
+	value: Number,
+	valueUSD: Number,
 	currency_type: String,
 	bank_account_name: String,
-  bank_account_number: String,
-  bank_bvn_number: String,
-  bank_name: String,
+	bank_account_number: String,
+	bank_bvn_number: String,
+	bank_name: String,
 	crypto_wallet_type: String,
-	crytocurrency: String,
 	crypto_address: String,
 	crypto_api_key: String,
 	crypto_api_secret: String,
@@ -28,6 +28,6 @@ const AssetSchema = new mongoose.Schema({
 	// realEstate_value: {
 	//   type: String,
 	// }
-}, {timestamps: true});
+}, { timestamps: true });
 
 module.exports = mongoose.model("asset", AssetSchema);

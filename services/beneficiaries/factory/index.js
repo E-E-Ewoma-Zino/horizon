@@ -35,14 +35,10 @@ exports.create_user_factory = async (data) => {
  */
 exports.create_beneficiary_factory = async (data) => {
 	try {
-		// A user can only have one Truestee
-		const doesTrusteeExist = await this.get_all_beneficiary_factory({user: data.user, isTrustee: true});
+		if (data.isTrustee) {
+			const resetTruestee = await this.only_one_trustee(data.user);
 
-		if(doesTrusteeExist.result.length && data.isTrustee) throw {
-			status: STATUS.CONFLICT_409,
-			error: "CONFLICT",
-			message: "Failed to create Beneficiary. You can only have one Truestee!",
-			result: doesTrusteeExist.result
+			if (!resetTruestee.result) throw resetTruestee;
 		}
 
 		const result = await BeneficiaryDAO.create(data);
@@ -62,6 +58,38 @@ exports.create_beneficiary_factory = async (data) => {
 			message: "Successfully created beneficiary",
 			error: null,
 			result
+		}
+	} catch (error) {
+		return ERROR(error);
+	}
+}
+
+exports.only_one_trustee = async (userId) => {
+	try {
+		const trustee = await this.get_all_beneficiary_factory({ user: userId, isTrustee: true });
+	
+		if (!trustee.result.length) throw {
+			status: STATUS.NOT_FOUND_404,
+			error: "SERVER_ERROR",
+			message: "Failed to find user trustee",
+			result: trustee.result
+		}
+	
+		// remove the trustee
+		const removeTruestee = await this.update_beneficiary_factory({ _id: trustee.result[0]._id, isTrustee: false });
+	
+		if (!removeTruestee.result) throw {
+			status: STATUS.NOT_FOUND_404,
+			error: "SERVER_ERROR",
+			message: "Failed to reset user trustee",
+			result: trustee.result
+		}
+	
+		return {
+			status: STATUS.OK_200,
+			message: "Successfully reset beneficiary trustee",
+			error: null,
+			result: true
 		}
 	} catch (error) {
 		return ERROR(error);
@@ -101,8 +129,15 @@ exports.get_beneficiary_factory = async (data) => {
  * @example update_beneficiary({...otherData, _id: "23237778a99c22c282ae8"});
  */
 exports.update_beneficiary_factory = async (data) => {
-	const { _id, ...others } = data;
 	try {
+		if (data.isTrustee) {
+			const resetTruestee = await this.only_one_trustee(data.user);
+			
+			if (!resetTruestee.result) throw resetTruestee;
+		}
+		
+		const { _id, ...others } = data;
+
 		const result = await BeneficiaryDAO.update(_id, others);
 
 		if (!result) throw {
@@ -129,15 +164,17 @@ exports.update_beneficiary_factory = async (data) => {
  * @example delete_beneficiary({...otherData, _id: "23237778a99c22c282ae8"});
  */
 
-exports.delete_beneficiary_factory = async (id) => {
+exports.delete_beneficiary_factory = async (data) => {
 	try {
-		const result = await BeneficiaryDAO.remove(id);
+		const result = await BeneficiaryDAO.remove(data);
+
 		if (!result) throw {
 			status: STATUS.NOT_FOUND_404,
 			error: "NOT FOUND",
-			message: "User does not exist: " + id,
+			message: "User does not exist: " + data._id,
 			result
 		}
+
 		return {
 			status: STATUS.OK_200,
 			message: "User Successfully Deleted",

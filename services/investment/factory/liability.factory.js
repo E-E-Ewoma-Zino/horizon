@@ -88,14 +88,13 @@ exports.update_liability_factory = async (data) => {
  * Note: Request data must contain _id 
  * @example delete_liability({...otherData, _id: "23237778a99c22c282ae8"});
  */
-
-exports.delete_liability_factory = async (id) => {
+exports.delete_liability_factory = async (data) => {
 	try {
-		const result = await liabilityDao.remove(id);
+		const result = await liabilityDao.remove(data);
 		if (!result) throw {
 			status: STATUS.NOT_FOUND_404,
 			error: "NOT FOUND",
-			message: "Liability does not exist: " + id,
+			message: "Liability does not exist for: " + data._id,
 			result
 		}
 		return {
@@ -110,6 +109,13 @@ exports.delete_liability_factory = async (id) => {
 	}
 }
 
+
+/**
+ * ### Liabilities Factory
+ * Use this method to get all liabilities
+ * Note: data can contain a query 
+ * @example get_all_liability_factory({user: "23237778a99c22c282ae8", typeOf: "loan"});
+ */
 exports.get_all_liability_factory = async (data) => {
 	try {
 		const result = await liabilityDao.findAllByUser(data);
@@ -127,5 +133,51 @@ exports.get_all_liability_factory = async (data) => {
 		}
 	} catch (err) {
 		return ERROR(err);
+	}
+}
+
+
+/**
+ * ### Liabilities Factory
+ * Use this method to get details about all liability
+ * this detail will contain total of all liability, total for each liability, and each liability in it's own field
+ * Note: Request data must contain _id 
+ * @example get_liability_details_factory("23237778a99c22c282ae8");
+ */
+exports.get_liability_details_factory = async (userId) => {
+	try {
+		const allUserLiabilities = await liabilityDao.findAllByUser({user: userId});
+		const details = {};
+
+		if (!allUserLiabilities.length) throw {
+			status: STATUS.NOT_FOUND_404,
+			error: "SERVER_ERROR",
+			message: "Failed to find liability with user: " + userId,
+			result: allUserLiabilities,
+		};
+
+		// separate liability
+		allUserLiabilities.forEach(lib => {
+			// push arr to all property in the details.liabilityType.
+			Array.isArray(details[lib.typeOf]?.all) ? details[lib.typeOf].all.push(lib): details[lib.typeOf] = {all: [lib]};
+
+			// get total liability for each liability
+			details[lib.typeOf].total ? details[lib.typeOf].total += lib.valueUSD: details[lib.typeOf].total = lib.valueUSD;
+
+			// liability count
+			details[lib.typeOf].count ? details[lib.typeOf].count++: details[lib.typeOf].count = 1;
+
+			// get total of alll liability
+			details.total? details.total += lib.valueUSD: details.total = lib.valueUSD;
+		});
+
+		return {
+			status: STATUS.OK_200,
+			message: "Asset for " + userId,
+			error: null,
+			result: details,
+		};
+	} catch (error) {
+		return ERROR(error);
 	}
 }

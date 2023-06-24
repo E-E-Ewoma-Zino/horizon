@@ -15,6 +15,7 @@ const BeneficiarySchema = new mongoose.Schema({
 		required: true,
 		unique: true,
 	},
+	phone: String,
 	isTrustee: {
 		type: Boolean,
 		default: false,

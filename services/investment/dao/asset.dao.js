@@ -11,16 +11,16 @@ class AssetDAO {
 		return await this.asset.create(data);
 	}
 
-	async findById(id) {
-		return await this.asset.findById(id);
+	async findById(data) {
+		return await this.asset.findById(data._id);
 	}
 
 	async getAllByUser(data) {
 		return await this.asset.find(data);
 	}
 
-	async delete(id) {
-		return await this.asset.findByIdAndDelete(id, this.options);
+	async delete(data) {
+		return await this.asset.findByIdAndDelete(data._id, this.options);
 	}
 
 	async update(id, data) {

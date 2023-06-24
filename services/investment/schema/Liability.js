@@ -14,6 +14,7 @@ const LiabilitySchema = new mongoose.Schema({
 	},
 
 	// All Liabilities contains similar requirement, just differs with naming
+	valueUSD: Number,
 	balance: Number,
 	paymentBalance: Number,
 	currency: String,

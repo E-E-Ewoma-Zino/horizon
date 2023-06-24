@@ -1,7 +1,10 @@
 {
   "dependencies": {
     "@alicloud/pop-core": "^1.7.13",
+    "axios": "^1.4.0",
+    "crypto-converter-lt": "^1.0.0-alpha.4",
     "currency-converter-lt": "^2.0.0",
+    "dollars-to-cents": "^1.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-flash": "^0.0.2",

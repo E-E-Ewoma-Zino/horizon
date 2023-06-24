@@ -3,7 +3,6 @@ const {
   verify_general_create_asset,
   verify_general_asset_update,
   verify_get_all_user_asset,
-  currencyConverter,
 } = require("../middleware/asset.middleware");
 const {
   create_asset,
@@ -11,12 +10,14 @@ const {
   delete_asset,
   get_all_asset,
   get_one_asset,
+  asset_details,
 } = require("../controllers/asset.controllers");
 
 module.exports = (app) => {
   app.get("/asset-id/:id", verifyId, get_one_asset);
-  app.post("/asset-create", verify_general_create_asset, create_asset, currencyConverter);
-  app.put("/asset-update/:id", verify_general_asset_update, update_asset, currencyConverter);
+  app.get("/asset/:id", verify_get_all_user_asset, asset_details);
+  app.post("/asset-create", verify_general_create_asset, create_asset);
+//   app.put("/asset-update/:id", verify_general_asset_update, update_asset);
   app.delete("/asset-delete/:id", verifyId, delete_asset);
   app.get("/asset-get-all/:id", verify_get_all_user_asset, get_all_asset);
 };

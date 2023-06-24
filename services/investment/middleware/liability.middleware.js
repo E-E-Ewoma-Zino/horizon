@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const ERROR = require("../../../constants/error.constant");
 const STATUS = require("../../../constants/status.constants");
+const currencyConverter = require("./helper/currencyConverter");
 
 /**
  * ### Liabilities Middleware
@@ -39,12 +40,13 @@ exports.verifyId = (req, res, next) => {
  * #### Create Liabilities
  * Validate the liability before creating it
  */
-exports.verify_create_liability = (req, res, next) => {
+exports.verify_create_liability = async (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
 			user: Joi.string().alphanum().required(),
 			typeOf: Joi.string().required(),
 			balance: Joi.number().required(),
+			valueUSD: Joi.number(),
 			paymentBalance: Joi.number().required(),
 			currency: Joi.string().required(),
 			address: Joi.string(),
@@ -55,8 +57,10 @@ exports.verify_create_liability = (req, res, next) => {
 
 		const input = {
 			...req.body,
-			document: req.files
-		}
+			document: req.body.file,
+			balance: req.body.balance * MONETARY_UNIT[req.body.currency],
+			valueUSD: await currencyConverter(req.body.balance, req.body.currency)
+		};
 
 		const { error, value } = schema.validate(input);
 
@@ -80,12 +84,13 @@ exports.verify_create_liability = (req, res, next) => {
  * #### Update Liabilities
  * Validate the liability before updateing it
  */
-exports.verify_update_liability = (req, res, next) => {
+exports.verify_update_liability = async (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
 			_id: Joi.string().alphanum().required(),
 			typeOf: Joi.string().required(),
 			balance: Joi.number().required(),
+			valueUSD: Joi.number(),
 			paymentBalance: Joi.number().required(),
 			currency: Joi.string().required(),
 			address: Joi.string(),
@@ -97,9 +102,10 @@ exports.verify_update_liability = (req, res, next) => {
 		// add user: req.userId after user Auth is made
 		const input = {
 			...req.body,
-			_id: req.params.id,
-			document: req.files
-		}
+			document: req.body.file,
+			balance: req.body.balance * MONETARY_UNIT[req.body.currency],
+			valueUSD: await currencyConverter(req.body.balance, req.body.currency)
+		};
 
 		const { error, value } = schema.validate(input);
 

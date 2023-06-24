@@ -25,7 +25,6 @@ exports.create_asset_factory = async (data) => {
 }
 
 exports.update_asset_factory = async (data) => {
-	console.log("logo", data)
 	const { _id, ...others } = data;
 	try {
 		const result = await assetDao.update(_id, others);
@@ -48,25 +47,25 @@ exports.update_asset_factory = async (data) => {
 	}
 }
 
-exports.delete_asset_factory = async (id) => {
+exports.delete_asset_factory = async (data) => {
 	try {
-		const result = await assetDao.delete(id);
-		if (!result)
-			throw {
-				status: STATUS.NOT_FOUND_404,
-				error: "NOT FOUND",
-				message: "User does not exist: " + _id,
-				result,
-			};
+		const result = await assetDao.delete(data);
+
+		if (!result) throw {
+			status: STATUS.NOT_FOUND_404,
+			error: "NOT FOUND",
+			message: "Asset does not exist for id: " + data._id,
+			result,
+		};
+		
 		return {
 			status: STATUS.OK_200,
-			message: "User Successfully Deleted",
+			message: "Asset Successfully Deleted",
 			result,
 		};
 	} catch (error) {
 		return ERROR(error);
 	}
-
 }
 
 
@@ -90,11 +89,9 @@ exports.get_all_asset_factory = async (data) => {
 	}
 }
 
-
-
-exports.get_asset_factory = async (id) => {
+exports.get_asset_factory = async (data) => {
 	try {
-		const result = await assetDao.findById(id);
+		const result = await assetDao.findById(data);
 
 		if (!result)
 			throw {
@@ -109,6 +106,44 @@ exports.get_asset_factory = async (id) => {
 			message: "Successfully found asset",
 			error: null,
 			result,
+		};
+	} catch (error) {
+		return ERROR(error);
+	}
+}
+
+exports.get_asset_details_factory = async (userId) => {
+	try {
+		const allUserAssets = await assetDao.getAllByUser({ user: userId });
+		const details = {};
+
+		if (!allUserAssets.length) throw {
+			status: STATUS.NOT_FOUND_404,
+			error: "SERVER_ERROR",
+			message: "Failed to find asset with user: " + userId,
+			result: allUserAssets,
+		};
+
+		// separate assets
+		allUserAssets.forEach(ass => {
+			// push arr to all property in the details.assetType.
+			Array.isArray(details[ass.typeOf]?.all) ? details[ass.typeOf].all.push(ass) : details[ass.typeOf] = { all: [ass] };
+
+			// get total asset for each assets
+			details[ass.typeOf].total ? details[ass.typeOf].total += ass.valueUSD : details[ass.typeOf].total = ass.valueUSD;
+
+			// asset count
+			details[ass.typeOf].count ? details[ass.typeOf].count++ : details[ass.typeOf].count = 1;
+
+			// get total of alll assets
+			details.total ? details.total += ass.valueUSD : details.total = ass.valueUSD;
+		});
+
+		return {
+			status: STATUS.OK_200,
+			message: "Asset for " + userId,
+			error: null,
+			result: details,
 		};
 	} catch (error) {
 		return ERROR(error);

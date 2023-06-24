@@ -27,8 +27,8 @@ class LiabilityDAO {
 		return await this.liability.findByIdAndDelete(id);
 	}
 	
-	async findAllByUser(user) {
-		return await this.liability.find(user);
+	async findAllByUser(data) {
+		return await this.liability.find(data);
 	}
 }
 
