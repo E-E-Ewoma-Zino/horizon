@@ -7,32 +7,6 @@ const generalEmmiter = require("../../notification/listeners");
  * ### Beneficiaries Factory
  * Use this method to create a new beneficiary 
  */
-exports.create_user_factory = async (data) => {
-	try {
-		const result = await BeneficiaryDAO.createUser(data);
-
-		if (!result) throw {
-			status: STATUS.SERVER_ERR_500,
-			error: "SERVER_ERROR",
-			message: "Failed to create Beneficiary",
-			result
-		}
-
-		return {
-			status: STATUS.CREATED_201,
-			message: "Successfully created beneficiary",
-			error: null,
-			result
-		}
-	} catch (error) {
-		return ERROR(error);
-	}
-}
-
-/**
- * ### Beneficiaries Factory
- * Use this method to create a new beneficiary 
- */
 exports.create_beneficiary_factory = async (data) => {
 	try {
 		if (data.isTrustee) {

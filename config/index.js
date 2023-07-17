@@ -12,7 +12,9 @@ const settings = {
 	alibabaRegion: process.env.ALIBABA_BUCKET_REGION,
 	alibabaUrlEndpoint: process.env.ALIBABA_URL_ENDPOINT,
 	alibabaKeySecret: process.env.ALIBABA_KEY_SECRET,
-	alibabaApiVersion: process.env.ALIBABA_API_VERSION
+	alibabaApiVersion: process.env.ALIBABA_API_VERSION,
+	tokenSecret: process.env.TOKEN_SECRET,
+	refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET
 }
 
 module.exports = settings;

@@ -8,12 +8,7 @@ const mongoose = require("mongoose");
 class BeneficiaryDAO {
 	constructor() {
 		this.beneficiary = require("../schema/Beneficiary");
-		this.user = require("../schema/User");
 		this.options = { new: true };
-	}
-
-	async createUser(data) {
-		return await this.user.create(data);
 	}
 
 	async create(data) {
