@@ -14,7 +14,11 @@ const settings = {
 	alibabaKeySecret: process.env.ALIBABA_KEY_SECRET,
 	alibabaApiVersion: process.env.ALIBABA_API_VERSION,
 	tokenSecret: process.env.TOKEN_SECRET,
-	refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET
+	refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+	moralisAppDomain: process.env.APP_DOMAIN,
+	moralisAPIKey: process.env.MORALIS_API_KEY,
+	moralisAuthUrl: process.env.AUTH_URL,
+	moralisAuthSecreat: process.env.AUTH_SECREAT
 }
 
 module.exports = settings;

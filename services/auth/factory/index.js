@@ -17,13 +17,13 @@ exports.verify_user_factory = async (data) => {
 		// if Successfully create send mail to beneficiary
 		generalEmmiter.emit("verify_user", result);
 
-		// send welcome mail to user
+		// TODO: send welcome mail to user
 
 		// After 10mins delete the otp
 		setTimeout(async () => {
 			console.log("Removing OTP", result);
 			await this.remove_otp_factory(result);
-		}, 100000);
+		}, 600 * 100);
 		
 		return {
 			status: STATUS.CREATED_201,
