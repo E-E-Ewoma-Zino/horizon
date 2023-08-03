@@ -43,6 +43,7 @@ exports.verify_general_create_asset = async (req, res, next) => {
 			user: Joi.string().alphanum().required(),
 			typeOf: Joi.string().required(),
 			value: Joi.number(),
+			okra: Joi.object(),
 			valueUSD: Joi.number(),
 			currency_type: Joi.string(),
 			bank_bvn_number: Joi.number(),
@@ -59,13 +60,19 @@ exports.verify_general_create_asset = async (req, res, next) => {
 
 		const input = {
 			...req.body,
-			file: req.body.file,
-			valueUSD: await currencyConverter(req.body.value, req.body.currency_type)
+			file: req.body.file
 		};
 
-		// convert value
-		if(input.typeOf !== "crypto") {
-			input.value = req.body.value * MONETARY_UNIT[req.body.currency_type];
+		console.log("user", req.body);
+
+		// also check if okra is present in the object. if it is then there is no more need for manual method
+		if(!input.okra) {
+			// convert value
+			input.valueUSD = await currencyConverter(req.body.value, req.body.currency_type)
+			
+			if(input.typeOf !== "crypto") {
+				input.value = req.body.value * MONETARY_UNIT[req.body.currency_type];
+			}
 		}
 		
 		const { value, error } = schema.validate(input);
@@ -94,6 +101,7 @@ exports.verify_general_asset_update = async (req, res, next) => {
 			value: Joi.number(),
 			currency_type: Joi.string(),
 			bank_bvn_number: Joi.number(),
+			okra: Joi.object(),
 			bank_account_number: Joi.number(),
 			valueUSD: Joi.number(),
 			bank_account_name: Joi.string(),

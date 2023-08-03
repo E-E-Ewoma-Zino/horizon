@@ -13,6 +13,7 @@
 		"@alicloud/pop-core": "^1.7.13",
 		"@moralisweb3/common-evm-utils": "^2.22.4",
 		"axios": "^1.4.0",
+		"cors": "^2.8.5",
 		"crypto-converter-lt": "^1.0.0-alpha.4",
 		"currency-converter-lt": "^2.0.0",
 		"dollars-to-cents": "^1.0.3",

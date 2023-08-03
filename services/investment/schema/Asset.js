@@ -11,6 +11,7 @@ const AssetSchema = new mongoose.Schema({
 		enum: ["bankAccount", "crypto", "realEstate", "Others"],
 		required: true,
 	},
+	okra: Object,
 	name: String,
 	value: Number,
 	valueUSD: Number,
