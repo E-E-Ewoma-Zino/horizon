@@ -124,14 +124,13 @@ exports.verify_general_asset_update = async (req, res, next) => {
 
 		const { value, error } = schema.validate(updated_data);
 
-		if (error)
-			throw {
-				status: STATUS.BAD_REQUEST_400,
-				message: "Please check the inputed information and try again!",
-				error_code: "V403VUL",
-				error: error,
-				result: value,
-			};
+		if (error) throw {
+			status: STATUS.BAD_REQUEST_400,
+			message: "Please check the inputed information and try again!",
+			error_code: "V403VUL",
+			error: error,
+			result: value
+		};
 
 		req.body = value;
 		return next();
