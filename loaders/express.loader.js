@@ -1,10 +1,11 @@
 const cors = require("cors");
 const express = require("express");
 const settings = require("../config");
-const benefactorRoutes = require("../services/beneficiaries/routes/benefactor.routes");
-const liabilityRoutes = require("../services/investment/routes/liability.routes");
-const assetRoutes = require('../services/investment/routes/asset.routes');
 const authRoutes = require('../services/auth/routes/index.routes');
+const vaultRoutes = require("../services/vault/routes/index.routes");
+const assetRoutes = require('../services/investment/routes/asset.routes');
+const liabilityRoutes = require("../services/investment/routes/liability.routes");
+const benefactorRoutes = require("../services/beneficiaries/routes/benefactor.routes");
 
 /**
  * ### Express Initializer
@@ -23,6 +24,7 @@ const ExpressLoader = async () => {
 		// 
 		authRoutes(app);
 		assetRoutes(app);
+		vaultRoutes(app);
 		liabilityRoutes(app);
 		benefactorRoutes(app);
 

@@ -6,12 +6,13 @@ exports.createOtp = () => {
 }
 
 exports.createToken = (email, userId, family) => {
-	return jwt.sign({ email, userId, family }, settings.tokenSecret, { algorithm: 'HS256', expiresIn: "30s" });
+	return jwt.sign({ email, userId, family }, settings.tokenSecret, { algorithm: 'HS256', expiresIn: "5m" });
 }
 
 exports.createRefreshToken = (email, userId, family) => {
-	return jwt.sign({ email, userId, family }, settings.refreshTokenSecret, { algorithm: 'HS256', expiresIn: "1m" });
+	return jwt.sign({ email, userId, family }, settings.refreshTokenSecret, { algorithm: 'HS256', expiresIn: "1h" });
 }
 
-
-// create refresh token 
+exports.createVaultToken = (email, userId) => {
+	return jwt.sign({ email, userId }, settings.vaultTokenSecret, { algorithm: 'HS256', expiresIn: "5m" });
+}

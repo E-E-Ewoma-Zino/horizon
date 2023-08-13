@@ -1,9 +1,12 @@
 const Joi = require("joi");
 const ERROR = require("../../../constants/error.constant");
 const STATUS = require("../../../constants/status.constants");
+const upload = require("../../../middleware/multer.middleware");
+
+const uploadFile = upload.single("file");
 
 /**
- * ### Beneficiaries Middleware
+ * ### Vault Middleware
  * #### Verify Params Id
  * Validate the id before using it
  */
@@ -35,63 +38,26 @@ exports.verifyId = (req, res, next) => {
 }
 
 /**
- * ### Beneficiaries Middleware
+ * ### Vault Middleware
  * #### Verify Params user id and query
  * Validate the user id before using it
  */
-exports.verify_get_all_user_beneficiary = (req, res, next) => {
+exports.verify_get_all_user_vault = (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
 			user: Joi.string().alphanum().required()
-		}).unknown(true);
-
-		const input = {
-			user: req.params.id,
-			...req.query
-		}
-
-		const { error, value } = schema.validate(input);
-
-		if (error) throw {
-			status: STATUS.BAD_REQUEST_400,
-			message: "Please check the inputed information and try again!",
-			error_code: "V403VID",
-			error: error,
-			result: null
-		}
-
-		req.body = value;
-		return next();
-	} catch (err) {
-		return res.status(err.status || STATUS.SERVER_ERR_500).json(ERROR(err));
-	}
-}
-
-/**
- * ### Beneficiaries Middleware
- * #### Create Beneficiaries
- * Validate the beneficiary before creating it
- */
-exports.verify_create_beneficiary = (req, res, next) => {
-	try {
-		const schema = Joi.object().keys({
-			name: Joi.string().required(),
-			email: Joi.string().email().required(),
-			user: Joi.string().required(),
-			phone: Joi.string(),
-			isTrustee: Joi.boolean()
 		});
 
 		const input = {
-			user: req.user.id,
-			...req.body
+			user: req.userId
 		}
+
 		const { error, value } = schema.validate(input);
 
 		if (error) throw {
 			status: STATUS.BAD_REQUEST_400,
 			message: "Please check the inputed information and try again!",
-			error_code: "V403VCB",
+			error_code: "V403VGAUV",
 			error: error,
 			result: null
 		}
@@ -104,34 +70,78 @@ exports.verify_create_beneficiary = (req, res, next) => {
 }
 
 /**
- * ### Beneficiaries Middleware
- * #### Update Beneficiaries
- * Validate the beneficiary before updateing it
+ * ### Vault Middleware
+ * #### Create Vault
+ * Validate the vault before creating it
  */
-exports.verify_update_beneficiary = (req, res, next) => {
+exports.verify_create_vault = (req, res, next) => {
+	try {
+		uploadFile(req, res, (err) => {
+			console.log("file", req.file);
+			console.log("body", req.body);
+
+			const schema = Joi.object().keys({
+				name: Joi.string().required(),
+				user: Joi.string().alphanum().required(),
+				file: Joi.object().unknown()
+			});
+
+			const input = {
+				user: req.userId,
+				file: req.file,
+				...req.body
+			}
+
+			const { error, value } = schema.validate(input);
+
+			if (error) throw {
+				status: STATUS.BAD_REQUEST_400,
+				message: "Please check the inputed information and try again!",
+				error_code: "V403VCB",
+				error: error,
+				result: null
+			}
+
+			req.body = value;
+			return next();
+		});
+	} catch (err) {
+		return res.status(err.status || STATUS.SERVER_ERR_500).json(ERROR(err));
+	}
+}
+
+/**
+ * ### Vault Middleware
+ * #### Update Vault
+ * Validate the vault before updateing it
+ */
+exports.verify_update_vault = (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
-			isTrustee: Joi.boolean(),
+			name: Joi.string(),
+			ben: Joi.object().keys({
+				method: Joi.number(),
+				beneficiaries: Joi.array()
+			}),
 			user: Joi.string().alphanum().required(),
-			_id: Joi.string().alphanum().required(),
+			_id: Joi.string().alphanum().required()
 		});
 
 		const input = {
-			isTrustee: req.body.isTrustee,
-			user: req.body.user,
+			...req.body,
+			user: req.userId,
 			_id: req.params.id
 		};
 
 		const { error, value } = schema.validate(input);
 
-		if (error)
-			throw {
-				status: STATUS.BAD_REQUEST_400,
-				message: "Please check the inputed information and try again!",
-				error_code: "V403VUB",
-				error: error,
-				result: null,
-			};
+		if (error) throw {
+			status: STATUS.BAD_REQUEST_400,
+			message: "Please check the inputed information and try again!",
+			error_code: "V403VUB",
+			error: error,
+			result: null,
+		};
 
 		req.body = value;
 		return next();

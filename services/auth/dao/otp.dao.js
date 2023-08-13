@@ -9,8 +9,8 @@ class OTPDao {
 		this.options = { new: true };
 	}
 
-	async create(email) {
-		return await this.otp.create({email, otp: Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000});
+	async create(email, use) {
+		return await this.otp.create({email, use, otp: Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000});
 	}
 
 	async findOne(data) {

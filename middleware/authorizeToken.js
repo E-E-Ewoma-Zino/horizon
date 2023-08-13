@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const settings = require("../config");
 const tokenizerHelper = require("../helper/tokenizer.helper");
+const STATUS = require("../constants/status.constants");
 // Verify tokens here
 
 /**
@@ -11,19 +12,20 @@ exports.authorize_token = async (req, res, next) => {
 	const token = req.headers.authorization;
 
 	if (!token) {
-		res.status(499).json({ status: 499, message: "Provide a valid token" })
+		res.status(STATUS.MISSING_TOKEN_499).json({ status: STATUS.MISSING_TOKEN_499, message: "Provide a valid token", error: "NO_TOKEN_PROVIDED" });
 	} else {
 		jwt.verify(token, settings.tokenSecret, { algorithm: 'HS256' }, (error, unlocked) => {
 			if (error) {
 				if (error.name === 'TokenExpiredError') {
 					refreshToken(req, res, next);
 				} else {
-					res.status(500).json({ status: 500, message: 'Failed to authenticate token', error: error.message })
+					res.status(STATUS.SERVER_ERR_500).json({ status: STATUS.SERVER_ERR_500, message: 'Failed to authenticate token', error: error.message });
 				}
 				//
 			} else {
 				req.userId = unlocked.userId;
-				req.email = unlocked.email;
+				req.username = unlocked.email;
+
 				next();
 			}
 		});
@@ -39,7 +41,7 @@ async function refreshToken(req, res, next) {
 		let refreshToken = req.headers.refreshtoken;
 
 		if (!refreshToken) {
-			return res.status(403).json({ status: 403, message: 'Failed to authenticate token', error: "NO_TOKEN_PROVIDED" });
+			return res.status(STATUS.MISSING_TOKEN_499).json({ status: STATUS.MISSING_TOKEN_499, message: "Provide a valid token", error: "NO_RTOKEN_PROVIDED" });
 		}
 
 		const unlockedRefresh = await new Promise((resolve, reject) => {
@@ -61,17 +63,16 @@ async function refreshToken(req, res, next) {
 		if (unlockedRefresh.family !== decodedPayload.family) {
 			return res.status(498).json({ error: "Invalid Token", message: "Token family mismatch", status: 498 });
 		}
+		const { token: newAccessToken } = tokenizerHelper(unlockedRefresh.email, unlockedRefresh.userId);
 
-		const { token: newAccessToken, refreshToken: newRefreshToken } = tokenizerHelper(unlockedRefresh.email, unlockedRefresh.userId);
-				
 		req.newAccessToken = newAccessToken;
-		req.newRefreshToken = newRefreshToken;
+
+		// TODO: Send the newAccessToken to the client. I don't know how to do it for this middleware :(   maybe cookies and headers...
 
 		req.userId = unlockedRefresh.userId;
 		req.username = unlockedRefresh.email;
 
 		next();
-
 	} catch (error) {
 		if (error instanceof jwt.JsonWebTokenError) return res.status(498).json({ status: 498, error: "Invalid Token", message: error.message });
 		return res.status(500).json({ status: 500, message: error.message });

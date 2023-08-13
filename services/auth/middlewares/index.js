@@ -14,7 +14,7 @@ exports.verify_email = (req, res, next) => {
 			email: Joi.string().email().required()
 		});
 
-		const input = {...req.body};
+		const input = { ...req.body };
 
 		const { error, value } = schema.validate(input);
 
@@ -45,7 +45,7 @@ exports.verify_OTP = (req, res, next) => {
 			email: Joi.string().email().required()
 		});
 
-		const input = {...req.body};
+		const input = { ...req.body };
 
 		const { error, value } = schema.validate(input);
 
@@ -56,6 +56,42 @@ exports.verify_OTP = (req, res, next) => {
 			error: error,
 			result: null
 		}
+
+		req.body = value;
+		return next();
+	} catch (err) {
+		return res.status(err.status || STATUS.SERVER_ERR_500).json(ERROR(err));
+	}
+}
+
+/**
+ * ### Vault Middleware
+ * #### Vault Auth
+ * Validate the user can access this vault
+ */
+exports.verify_vault = (req, res, next) => {
+	try {
+		const schema = Joi.object().keys({
+			pin: Joi.string().length(4).pattern(/^[0-9]+$/).required(),
+			user: Joi.string().alphanum().required(),
+			email: Joi.string().email(),
+			otp: Joi.number()
+		});
+
+		const input = {
+			...req.body,
+			user: req.userId
+		};
+
+		const { error, value } = schema.validate(input);
+
+		if (error) throw {
+			status: STATUS.BAD_REQUEST_400,
+			message: "Please check the inputed information and try again!",
+			error_code: "V403VUB",
+			error: error,
+			result: null,
+		};
 
 		req.body = value;
 		return next();

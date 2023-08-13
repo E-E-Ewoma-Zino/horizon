@@ -4,7 +4,7 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "nodemon index.js",
-		"start": "nodemon index.js"
+		"start": "node index.js"
 	},
 	"author": "HORIZON",
 	"license": "ISC",
@@ -13,6 +13,7 @@
 		"@alicloud/pop-core": "^1.7.13",
 		"@moralisweb3/common-evm-utils": "^2.22.4",
 		"axios": "^1.4.0",
+		"bcryptjs": "^2.4.3",
 		"cors": "^2.8.5",
 		"crypto-converter-lt": "^1.0.0-alpha.4",
 		"currency-converter-lt": "^2.0.0",
@@ -22,10 +23,12 @@
 		"express-flash": "^0.0.2",
 		"joi": "^17.9.2",
 		"jsonwebtoken": "^9.0.0",
+		"lodash": "^4.17.21",
 		"mongodb": "^5.5.0",
 		"mongoose": "^7.2.0",
 		"moralis": "^2.22.4",
 		"multer": "^1.4.5-lts.1",
+		"multer-aliyun-oss": "^2.1.1",
 		"nodemon": "^2.0.22",
 		"passport": "^0.6.0",
 		"passport-local": "^1.0.0"

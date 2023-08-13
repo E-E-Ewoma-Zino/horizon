@@ -8,6 +8,11 @@ const OTPSchema = new mongoose.Schema({
 	otp: {
 		type: String,
 		required: true
+	},
+	use: {
+		type: String,
+		enum: ["VAULT", "AUTH"],
+		required: true
 	}
 });
 
