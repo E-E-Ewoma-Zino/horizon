@@ -83,13 +83,13 @@ exports.update_vault_factory = async (data) => {
 		if (name) result = await VaultDAO.update(_id, { name });
 
 		// add ben
-		if (ben.beneficiaries?.length && ben.method) {
+		if (ben?.beneficiaries?.length && ben.method) {
 			const newBen = addOnlyNewBen(ben.beneficiaries, theVault);
 			result = await VaultDAO.update(_id, { $push: { beneficiaries: newBen } });
 		}
 
 		// remove ben
-		if (ben.beneficiaries?.length && !ben.method) {
+		if (ben?.beneficiaries?.length && !ben.method) {
 			result = await VaultDAO.update(_id, { $pull: { beneficiaries: { $in: ben.beneficiaries } } });
 		}
 
