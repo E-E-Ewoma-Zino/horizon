@@ -31,6 +31,7 @@
 		"multer-aliyun-oss": "^2.1.1",
 		"nodemon": "^2.0.22",
 		"passport": "^0.6.0",
-		"passport-local": "^1.0.0"
+		"passport-local": "^1.0.0",
+		"vezgo-sdk-js": "^1.0.9"
 	}
 }

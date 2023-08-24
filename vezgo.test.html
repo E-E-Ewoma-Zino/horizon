@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>Vezgo Example App</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+		integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<!-- Vezgo CDN -->
+	<script src="https://unpkg.com/vezgo-sdk-js@1.0.3/dist/vezgo.js" referrerpolicy="no-referrer"
+		crossorigin="anonymous"></script>
+</head>
+
+<body>
+	<noscript>
+		<strong>We're sorry but Vezgo Example App doesn't work properly without JavaScript enabled. Please enable it to
+			continue.</strong>
+	</noscript>
+	<div id="app">
+		<h1>Vezgo Example App</h1>
+
+		<label for="username">Logged in as</label>
+		<input type="text" id="username" value="username_1" />
+
+		<br><br>
+
+		<label for="account_id">Account ID</label>
+		<input type="text" id="account_id" value="" />
+		<button id="connect">Connect</button>
+		<button id="reconnect">Reconnect</button>
+		<br><br>
+
+		<div id="connection_error">Connection error: <strong></strong></div>
+		<br><br>
+
+		<button id="get_accounts">Get Accounts</button>
+		<button id="get_account">Get Account</button>
+		<button id="get_transactions">Get Transaction</button>
+
+		<div id="result"></div>
+
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+			integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+			crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<script type="text/javascript">
+			let user;
+			let vezgo;
+			let accountId;
+
+			async function getUserTokenFromYourServer() {
+				try{
+					const token = await axios.post("http://localhost:8080/vezgo/auth", {}, {
+						headers: { Authorization: `Bearer ${$('#username').val()}` }
+					});
+
+					console.log("token", token);
+					return token.data.result.token;
+				}catch(error){
+					return null;
+				}
+			}
+
+			function login() {
+				vezgo = Vezgo.init({
+					clientId: "7i3ujeug5ab2qbm6kp0ld6mlgv",
+					authorizer: async (callback) => {
+						try {
+							const token = await getUserTokenFromYourServer();
+
+							console.log("lllll", token);
+							callback(null, { token });
+						} catch (error) {
+							callback(error);
+						}
+					}
+				});
+
+				user = vezgo.login();
+			}
+
+			$(document).ready(function () {
+				$("#connect").click(function () {
+					$('#connection_error strong').text('');
+
+					console.log("here1");
+					login();
+					console.log("here2");
+
+					user.connect().onConnection(function (account) {
+						console.log("here3");
+						console.log('connection success', account);
+						$('#account_id').val(account);
+						console.log("here4");
+					}).onError(function (error) {
+						console.log('connection error', error);
+						$('#connection_error strong').text(error.message);
+					});
+				});
+
+				$("#reconnect").click(function () {
+					const accountId = $('#account_id').val();
+					if (!accountId) alert('Must enter an Account ID first.')
+					$('#connection_error strong').text('');
+
+					login();
+
+					user.reconnect(accountId).onConnection(function (account) {
+						console.log('reconnection success', account);
+						$('#account_id').val(account);
+					}).onError(function (error) {
+						console.log('reconnection error', error);
+						$('#connection_error strong').text(error.message);
+					});
+				});
+
+				$("#get_accounts").click(async function () {
+					login();
+
+					try {
+						const accounts = await user.accounts.getList();
+
+						$('#result').html('Accounts:<br><code>' + JSON.stringify(accounts) + '</code>');
+					} catch (err) {
+						$('#result').html('Error:<br><code>' + err + '</code>');
+					}
+				});
+
+				$("#get_account").click(async function () {
+					const accountId = $('#account_id').val();
+					if (!accountId) alert('Must connect an account first');
+
+					login();
+
+					try {
+						const account = await user.accounts.getOne(accountId);
+
+						$('#result').html('Account:<br><code>' + JSON.stringify(account) + '</code>');
+					} catch (err) {
+						$('#result').html('Error:<br><code>' + err + '</code>');
+					}
+				});
+
+				$("#get_transactions").click(async function () {
+					const accountId = $('#account_id').val();
+					if (!accountId) alert('Must connect an account first');
+
+					login();
+
+					try {
+						const transactions = await user.transactions.getList({ accountId });
+
+						$('#result').html('Transactions:<br><code>' + JSON.stringify(transactions) + '</code>');
+					} catch (err) {
+						$('#result').html('Error:<br><code>' + err + '</code>');
+					}
+				});
+			});
+		</script>
+	</div>
+</body>
+
+</html>
