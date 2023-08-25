@@ -13,5 +13,5 @@ module.exports = (app) => {
 	app.post("/beneficiary-create", authorize_token, verify_create_beneficiary, create_beneficiary);
 	app.put("/beneficiary-update/:id", authorize_token, verify_update_beneficiary, update_beneficiary);
 	app.delete("/beneficiary-delete/:id", authorize_token, verifyId, delete_beneficiary);
-	app.get("/beneficiary-get-all/:id", authorize_token, verify_get_all_user_beneficiary, get_all_beneficiary);
+	app.get("/beneficiary-get-all", authorize_token, verify_get_all_user_beneficiary, get_all_beneficiary);
 }

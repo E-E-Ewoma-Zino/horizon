@@ -14,7 +14,7 @@ exports.verify_email = (req, res, next) => {
 			email: Joi.string().email().required()
 		});
 
-		const input = { ...req.body };
+		const input = { email: req.body?.email?.toLowerCase()};
 
 		const { error, value } = schema.validate(input);
 
@@ -45,7 +45,7 @@ exports.verify_OTP = (req, res, next) => {
 			email: Joi.string().email().required()
 		});
 
-		const input = { ...req.body };
+		const input = { ...req.body, email: req.body?.email?.toLowerCase() };
 
 		const { error, value } = schema.validate(input);
 
@@ -80,6 +80,7 @@ exports.verify_vault = (req, res, next) => {
 
 		const input = {
 			...req.body,
+			email: req.body?.email?.toLowerCase(),
 			user: req.userId
 		};
 

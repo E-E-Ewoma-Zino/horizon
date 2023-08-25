@@ -10,11 +10,13 @@ const STATUS = require("../../../constants/status.constants");
 exports.verifyId = (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
-			_id: Joi.string().alphanum().required()
+			_id: Joi.string().alphanum().required(),
+			user: Joi.string().alphanum().required()
 		});
 
 		const input = {
-			_id: req.params.id
+			_id: req.params.id,
+			user: req.userId
 		}
 
 		const { error, value } = schema.validate(input);
@@ -46,7 +48,7 @@ exports.verify_get_all_user_beneficiary = (req, res, next) => {
 		}).unknown(true);
 
 		const input = {
-			user: req.params.id,
+			user: req.userId,
 			...req.query
 		}
 
@@ -83,8 +85,9 @@ exports.verify_create_beneficiary = (req, res, next) => {
 		});
 
 		const input = {
-			user: req.user.id,
-			...req.body
+			user: req.userId,
+			...req.body,
+			email: req.body?.email?.toLowerCase()
 		}
 		const { error, value } = schema.validate(input);
 
@@ -118,7 +121,7 @@ exports.verify_update_beneficiary = (req, res, next) => {
 
 		const input = {
 			isTrustee: req.body.isTrustee,
-			user: req.body.user,
+			user: req.userId,
 			_id: req.params.id
 		};
 

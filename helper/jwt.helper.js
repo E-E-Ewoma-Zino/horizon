@@ -6,7 +6,7 @@ exports.createOtp = () => {
 }
 
 exports.createToken = (email, userId, family) => {
-	return jwt.sign({ email, userId, family }, settings.tokenSecret, { algorithm: 'HS256', expiresIn: "5m" });
+	return jwt.sign({ email, userId, family }, settings.tokenSecret, { algorithm: 'HS256', expiresIn: "5h" });
 }
 
 exports.createRefreshToken = (email, userId, family) => {

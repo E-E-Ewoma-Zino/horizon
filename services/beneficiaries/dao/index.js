@@ -15,8 +15,8 @@ class BeneficiaryDAO {
 		return await this.beneficiary.create(data);
 	}
 
-	async findById(id) {
-		return await this.beneficiary.findById(id);
+	async findOne(data) {
+		return await this.beneficiary.findOne(data);
 	}
 
 	async update(id, data) {
@@ -34,7 +34,7 @@ class BeneficiaryDAO {
 	}
 
 	async remove(data) {
-		return await this.beneficiary.findByIdAndDelete(data._id, this.options);
+		return await this.beneficiary.findByIdAndDelete(data, this.options);
 	}
 
 	async findAllByUser(data) {

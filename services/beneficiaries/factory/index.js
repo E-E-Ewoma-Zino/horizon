@@ -76,7 +76,7 @@ exports.only_one_trustee = async (userId) => {
  */
 exports.get_beneficiary_factory = async (data) => {
 	try {
-		const result = await BeneficiaryDAO.findById(data);
+		const result = await BeneficiaryDAO.findOne(data);
 
 		if (!result) throw {
 			status: STATUS.NOT_FOUND_404,
@@ -137,7 +137,6 @@ exports.update_beneficiary_factory = async (data) => {
  * Note: Request data must contain _id 
  * @example delete_beneficiary({...otherData, _id: "23237778a99c22c282ae8"});
  */
-
 exports.delete_beneficiary_factory = async (data) => {
 	try {
 		const result = await BeneficiaryDAO.remove(data);
@@ -145,21 +144,24 @@ exports.delete_beneficiary_factory = async (data) => {
 		if (!result) throw {
 			status: STATUS.NOT_FOUND_404,
 			error: "NOT FOUND",
-			message: "User does not exist: " + data._id,
+			message: "Beneficiary does not exist: " + data._id,
 			result
 		}
 
 		return {
 			status: STATUS.OK_200,
-			message: "User Successfully Deleted",
+			message: "Beneficiary Successfully Deleted",
 			result
 		}
-
 	} catch (error) {
 		return ERROR(error);
 	}
 }
 
+/**
+ * ### Beneficiaries Factory
+ * Use this method to get all beneficiary belonging to the login user
+ */
 exports.get_all_beneficiary_factory = async (data) => {
 	try {
 		const result = await BeneficiaryDAO.findAllByUser(data);
@@ -171,7 +173,7 @@ exports.get_all_beneficiary_factory = async (data) => {
 		}
 		return {
 			status: STATUS.OK_200,
-			message: "All Beneficiaries: ",
+			message: `Found ${result.length} beneficiaries:`,
 			result
 		}
 	} catch (err) {

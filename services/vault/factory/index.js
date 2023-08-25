@@ -1,10 +1,7 @@
 const _ = require("lodash");
 const VaultDAO = require("../dao");
-const bcrypt = require("bcryptjs");
-const userDao = require("../../auth/dao/user.dao");
 const ERROR = require("../../../constants/error.constant");
 const STATUS = require("../../../constants/status.constants");
-const { default: mongoose } = require("mongoose");
 
 /**
  * ### Vault Factory

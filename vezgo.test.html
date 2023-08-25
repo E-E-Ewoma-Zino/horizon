@@ -122,6 +122,7 @@
 
 					try {
 						const accounts = await user.accounts.getList();
+						console.log("Accountsss", accounts);
 
 						$('#result').html('Accounts:<br><code>' + JSON.stringify(accounts) + '</code>');
 					} catch (err) {
@@ -132,12 +133,13 @@
 				$("#get_account").click(async function () {
 					const accountId = $('#account_id').val();
 					if (!accountId) alert('Must connect an account first');
-
+					
 					login();
-
+					
 					try {
 						const account = await user.accounts.getOne(accountId);
-
+						console.log("Account", account);
+						
 						$('#result').html('Account:<br><code>' + JSON.stringify(account) + '</code>');
 					} catch (err) {
 						$('#result').html('Error:<br><code>' + err + '</code>');
@@ -152,6 +154,7 @@
 
 					try {
 						const transactions = await user.transactions.getList({ accountId });
+						console.log("Transaction", transactions);
 
 						$('#result').html('Transactions:<br><code>' + JSON.stringify(transactions) + '</code>');
 					} catch (err) {
