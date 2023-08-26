@@ -15,8 +15,8 @@ class LiabilityDAO {
 		return await this.liability.create(data);
 	}
 	
-	async findById(id) {
-		return await this.liability.findById(id);
+	async findOne(data) {
+		return await this.liability.findOne(data);
 	}
 	
 	async update(id, data) {

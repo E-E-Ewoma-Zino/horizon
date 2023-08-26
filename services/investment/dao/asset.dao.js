@@ -11,8 +11,8 @@ class AssetDAO {
 		return await this.asset.create(data);
 	}
 
-	async findById(data) {
-		return await this.asset.findById(data._id);
+	async findOne(data) {
+		return await this.asset.findOne(data);
 	}
 
 	async getAllByUser(data) {

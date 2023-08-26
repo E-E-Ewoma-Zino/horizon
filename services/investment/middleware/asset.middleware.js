@@ -1,8 +1,6 @@
 const Joi = require("joi");
 const ERROR = require("../../../constants/error.constant");
-const MONETARY_UNIT = require("../constants/monetaryUnit");
 const STATUS = require("../../../constants/status.constants");
-const currencyConverter = require("./helper/currencyConverter");
 
 /**
  * ### Assets Middleware
@@ -12,11 +10,13 @@ const currencyConverter = require("./helper/currencyConverter");
 exports.verifyId = (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
-			_id: Joi.string().alphanum().required()
+			_id: Joi.string().alphanum().required(),
+			user: Joi.string().alphanum().required()
 		});
 
 		const input = {
-			_id: req.params.id
+			_id: req.params.id,
+			user: req.userId
 		}
 
 		const { error, value } = schema.validate(input);
@@ -36,44 +36,31 @@ exports.verifyId = (req, res, next) => {
 	}
 }
 
-//CREATES ASSET BASED ON ASSET TYPE
+/**
+ * ### Assets Middleware
+ * #### Verify the create asset data
+ * CREATES ASSET BASED ON ASSET TYPE
+ */
 exports.verify_general_create_asset = async (req, res, next) => {
 	try {
 		const schema = Joi.object({
 			user: Joi.string().alphanum().required(),
 			typeOf: Joi.string().required(),
 			value: Joi.number(),
-			okra: Joi.object(),
-			valueUSD: Joi.number(),
+			bank: Joi.object(),
+			crypto: Joi.object(),
 			currency_type: Joi.string(),
-			bank_bvn_number: Joi.number(),
-			bank_account_number: Joi.number(),
-			bank_account_name: Joi.string(),
-			bank_name: Joi.string(),
-			crypto_wallet_type: Joi.string(),
-			crypto_address: Joi.string(),
-			crypto_api_key: Joi.string().alphanum(),
-			crypto_api_secret: Joi.string().alphanum(),
 			realEstate_addess: Joi.string(),
 			file: Joi.object(),
 		});
 
 		const input = {
 			...req.body,
+			user: req.userId,
 			file: req.body.file
 		};
 
-		console.log("user", req.body);
-
-		// also check if okra is present in the object. if it is then there is no more need for manual method
-		if(!input.okra) {
-			// convert value
-			input.valueUSD = await currencyConverter(req.body.value, req.body.currency_type)
-			
-			if(input.typeOf !== "crypto") {
-				input.value = req.body.value * MONETARY_UNIT[req.body.currency_type];
-			}
-		}
+		console.log("body", req.body);
 		
 		const { value, error } = schema.validate(input);
 
@@ -92,33 +79,29 @@ exports.verify_general_create_asset = async (req, res, next) => {
 	}
 };
 
-
-//UPDATE ASSET BASED ON ID
+/**
+ * ### Assets Middleware
+ * #### Verify update asset data
+ * UPDATE ASSET BASED ON ID
+ * @deprecated Asset should no longer be updated
+*/
 exports.verify_general_asset_update = async (req, res, next) => {
 	try {
 		const schema = Joi.object({
 			_id: Joi.string().alphanum(),
+			user: Joi.string().alphanum().required(),
+			typeOf: Joi.string().required(),
 			value: Joi.number(),
+			bank: Joi.object(),
+			crypto: Joi.object(),
 			currency_type: Joi.string(),
-			bank_bvn_number: Joi.number(),
-			okra: Joi.object(),
-			bank_account_number: Joi.number(),
-			valueUSD: Joi.number(),
-			bank_account_name: Joi.string(),
-			bank_name: Joi.string(),
-			crypto_wallet_type: Joi.string(),
-			crytocurrency: Joi.string(),
-			crypto_address: Joi.string(),
-			crypto_api_key: Joi.string().alphanum(),
-			crypto_api_secret: Joi.string().alphanum(),
 			realEstate_addess: Joi.string(),
-			file: Joi.object()
+			file: Joi.object(),
 		});
 
 		const updated_data = {
 			...req.body,
-			_id: req.params.id,
-			value: req.body.typeOf !== "crypto"? await currencyConverter(req.body.value, req.body.currency_type): req.body.value,
+			user: req.userId,
 			file: req.body.file
 		};
 
@@ -152,7 +135,7 @@ exports.verify_get_all_user_asset = (req, res, next) => {
 		}).unknown(true);
 
 		const input = {
-			user: req.params.id,
+			user: req.userId,
 			...req.query
 		}
 

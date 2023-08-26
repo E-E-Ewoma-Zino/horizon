@@ -13,13 +13,14 @@ const {
 	asset_details,
 	vezgo_auth,
 } = require("../controllers/asset.controllers");
+const { authorize_token } = require("../../../middleware/authorizeToken");
 
 module.exports = (app) => {
-	app.get("/asset-id/:id", verifyId, get_one_asset);
-	app.get("/asset/:id", verify_get_all_user_asset, asset_details);
-	app.post("/asset-create", verify_general_create_asset, create_asset);
+	app.get("/asset-id/:id", authorize_token, verifyId, get_one_asset);
+	app.get("/asset", authorize_token, verify_get_all_user_asset, asset_details);
+	app.post("/asset-create", authorize_token, verify_general_create_asset, create_asset);
 	//	app.put("/asset-update/:id", verify_general_asset_update, update_asset);
-	app.delete("/asset-delete/:id", verifyId, delete_asset);
-	app.get("/asset-get-all/:id", verify_get_all_user_asset, get_all_asset);
-	app.post("/vezgo/auth", vezgo_auth);
+	app.delete("/asset-delete/:id", authorize_token, verifyId, delete_asset);
+	app.get("/asset-get-all", authorize_token, verify_get_all_user_asset, get_all_asset);
+	app.post("/asset/vezgo/auth", authorize_token, vezgo_auth);
 };

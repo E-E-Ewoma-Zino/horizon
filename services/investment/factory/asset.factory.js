@@ -92,7 +92,7 @@ exports.get_all_asset_factory = async (data) => {
 
 exports.get_asset_factory = async (data) => {
 	try {
-		const result = await assetDao.findById(data);
+		const result = await assetDao.findOne(data);
 
 		if (!result)
 			throw {

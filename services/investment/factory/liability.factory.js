@@ -34,7 +34,7 @@ exports.create_liability_factory = async (data) => {
  */
 exports.get_liability_factory = async (data) => {
 	try {
-		const result = await liabilityDao.findById(data);
+		const result = await liabilityDao.findOne(data);
 
 		if (!result) throw {
 			status: STATUS.NOT_FOUND_404,

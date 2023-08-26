@@ -22,7 +22,7 @@ const LiabilitySchema = new mongoose.Schema({
 	percentage: Number,
 	dueDate: Date,
 	document: Object,
-
+	bank: Object
 }, {timestamps: true});
 
 module.exports = mongoose.model("Liability", LiabilitySchema);

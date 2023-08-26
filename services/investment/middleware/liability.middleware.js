@@ -11,12 +11,16 @@ const currencyConverter = require("./helper/currencyConverter");
 exports.verifyId = (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
-			_id: Joi.string().alphanum().required()
+			_id: Joi.string().alphanum().required(),
+			user: Joi.string().alphanum().required()
 		});
 
 		const input = {
-			_id: req.params.id
+			_id: req.params.id,
+			user: req.userId
 		}
+
+		console.log("user", req.userId);
 
 		const { error, value } = schema.validate(input);
 
@@ -45,6 +49,7 @@ exports.verify_create_liability = async (req, res, next) => {
 		const schema = Joi.object().keys({
 			user: Joi.string().alphanum().required(),
 			typeOf: Joi.string().required(),
+			bank: Joi.object(),
 			balance: Joi.number().required(),
 			valueUSD: Joi.number(),
 			paymentBalance: Joi.number().required(),
@@ -57,10 +62,15 @@ exports.verify_create_liability = async (req, res, next) => {
 
 		const input = {
 			...req.body,
-			document: req.body.file,
-			balance: req.body.balance * MONETARY_UNIT[req.body.currency],
-			valueUSD: await currencyConverter(req.body.balance, req.body.currency)
+			user: req.userId,
+			document: req.body.file
 		};
+
+		// if bank is not provided then it is a manual input. So convert the value to the lowest value
+		if (!input.bank) {
+			input.balance = req.body.balance * MONETARY_UNIT[req.body.currency],
+			input.valueUSD = await currencyConverter(req.body.balance, req.body.currency)
+		}
 
 		const { error, value } = schema.validate(input);
 
@@ -137,7 +147,7 @@ exports.verify_get_all_user_liabilities = (req, res, next) => {
 		}).unknown(true);
 
 		const input = {
-			user: req.params.id,
+			user: req.userId,
 			...req.query
 		}
 
