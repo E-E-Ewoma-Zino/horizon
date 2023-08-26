@@ -13,11 +13,13 @@ const uploadFile = upload.single("file");
 exports.verifyId = (req, res, next) => {
 	try {
 		const schema = Joi.object().keys({
-			_id: Joi.string().alphanum().required()
+			_id: Joi.string().alphanum().required(),
+			user: Joi.string().alphanum().required()
 		});
 
 		const input = {
-			_id: req.params.id
+			_id: req.params.id,
+			user: req.userId
 		}
 
 		const { error, value } = schema.validate(input);

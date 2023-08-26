@@ -10,7 +10,7 @@ const STATUS = require("../constants/status.constants");
  */
 exports.authorize_token = async (req, res, next) => {
 	const token = req.headers.authorization;
-
+	
 	if (!token) {
 		res.status(STATUS.MISSING_TOKEN_499).json({ status: STATUS.MISSING_TOKEN_499, message: "Provide a valid token", error: "NO_TOKEN_PROVIDED" });
 	} else {
@@ -19,6 +19,7 @@ exports.authorize_token = async (req, res, next) => {
 				if (error.name === 'TokenExpiredError') {
 					refreshToken(req, res, next);
 				} else {
+					console.log("sss", token);
 					res.status(STATUS.SERVER_ERR_500).json({ status: STATUS.SERVER_ERR_500, message: 'Failed to authenticate token', error: error.message });
 				}
 				//
@@ -74,6 +75,7 @@ async function refreshToken(req, res, next) {
 
 		next();
 	} catch (error) {
+		console.error("err", error);
 		if (error instanceof jwt.JsonWebTokenError) return res.status(498).json({ status: 498, error: "Invalid Token", message: error.message });
 		return res.status(500).json({ status: 500, message: error.message });
 	}

@@ -20,6 +20,7 @@ exports.create_liability = async (req, res) => {
  * ### Liabilities Controller
  * #### Update A Liability
  * Use the request data to update the liability
+ * @deprecated Liabilities should no longer be updated
  */
 exports.update_liability = async (req, res) => {
 	try {

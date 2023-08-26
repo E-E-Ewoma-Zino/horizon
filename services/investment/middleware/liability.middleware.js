@@ -93,6 +93,7 @@ exports.verify_create_liability = async (req, res, next) => {
  * ### Liabilities Middleware
  * #### Update Liabilities
  * Validate the liability before updateing it
+ * @deprecated Liabilities should no longer be updated
  */
 exports.verify_update_liability = async (req, res, next) => {
 	try {

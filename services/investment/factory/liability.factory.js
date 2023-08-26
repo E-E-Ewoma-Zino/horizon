@@ -59,6 +59,7 @@ exports.get_liability_factory = async (data) => {
  * Use this method to update liability
  * Note: Request data must contain _id 
  * @example update_liability({...otherData, _id: "23237778a99c22c282ae8"});
+ * @deprecated Liabilities should no longer be updated
  */
 exports.update_liability_factory = async (data) => {
 	const { _id, ...others } = data;

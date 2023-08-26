@@ -24,6 +24,7 @@ exports.create_asset = async (req, res) => {
  * ### Assets Controller
  * #### Update Asset
  * Update an asset
+ * @deprecated Asset should no longer be updated
  */
 exports.update_asset = async (req, res) => {
 	try {

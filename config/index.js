@@ -20,7 +20,9 @@ const settings = {
 	moralisAPIKey: process.env.MORALIS_API_KEY,
 	moralisAuthUrl: process.env.AUTH_URL,
 	moralisAuthSecreat: process.env.AUTH_SECREAT,
-	bcrypt_key: process.env.BCRYPT_KEY
+	bcrypt_key: process.env.BCRYPT_KEY,
+	vezgoSecret: process.env.VEZGO_SECRET,
+	vezgoClientID: process.env.VEZGO_CLIENT_ID
 }
 
 module.exports = settings;

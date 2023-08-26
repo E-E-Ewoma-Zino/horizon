@@ -15,8 +15,8 @@ class VaultDAO {
 		return await this.vault.create(data);
 	}
 
-	async findById(id) {
-		return await this.vault.findById(id);
+	async findOne(data) {
+		return await this.vault.findOne(data);
 	}
 
 	async update(id, data) {

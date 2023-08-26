@@ -23,7 +23,7 @@
 		<h1>Vezgo Example App</h1>
 
 		<label for="username">Logged in as</label>
-		<input type="text" id="username" value="username_1" />
+		<input type="text" id="username" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJsZXNzaW5nYmpvaG5zb24yN0BnbWFpbC5jb20iLCJ1c2VySWQiOiI2NGU4ZWMwYjNjNzhmYWI4ZjQyZGJmZDYiLCJmYW1pbHkiOiI2NGU4ZWMwYjNjNzhmYWI4ZjQyZGJmZDYtMTY5MzA2NDQ3NTM1OSIsImlhdCI6MTY5MzA2NDQ3NSwiZXhwIjoxNjkzMDgyNDc1fQ.oQ7iLJ66wCaPsr76tRPCIOiaMW1Q9uFjLPeOTOqn0YM" />
 
 		<br><br>
 
@@ -52,14 +52,14 @@
 			let accountId;
 
 			async function getUserTokenFromYourServer() {
-				try{
-					const token = await axios.post("http://localhost:8080/vezgo/auth", {}, {
-						headers: { Authorization: `Bearer ${$('#username').val()}` }
+				try {
+					const token = await axios.post("http://localhost:8080/asset/vezgo/auth", {}, {
+						headers: { Authorization: `${$('#username').val()}` }
 					});
 
 					console.log("token", token);
 					return token.data.result.token;
-				}catch(error){
+				} catch (error) {
 					return null;
 				}
 			}
@@ -133,13 +133,25 @@
 				$("#get_account").click(async function () {
 					const accountId = $('#account_id').val();
 					if (!accountId) alert('Must connect an account first');
-					
+
 					login();
-					
+
 					try {
 						const account = await user.accounts.getOne(accountId);
 						console.log("Account", account);
-						
+						try {
+							const asset = await axios.post("http://localhost:8080/asset-create", {
+								typeOf: "crypto", // Possible values: "bank", "crypto", "realEstate", "others"
+								crypto: account
+							}, {
+								headers: { Authorization: `${$('#username').val()}` }
+							});
+
+							console.log("new asset", asset);
+						} catch (error) {
+							console.error("failed to creaate asset", error);
+						}
+
 						$('#result').html('Account:<br><code>' + JSON.stringify(account) + '</code>');
 					} catch (err) {
 						$('#result').html('Error:<br><code>' + err + '</code>');

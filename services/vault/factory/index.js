@@ -35,7 +35,7 @@ exports.create_vault_factory = async (data) => {
  */
 exports.get_vault_factory = async (data) => {
 	try {
-		const result = await VaultDAO.findById(data);
+		const result = await VaultDAO.findOne(data);
 
 		if (!result) throw {
 			status: STATUS.NOT_FOUND_404,
@@ -65,7 +65,7 @@ exports.update_vault_factory = async (data) => {
 	try {
 		const { _id, name, ben } = data;
 
-		const theVault = await VaultDAO.findById(_id);
+		const theVault = await VaultDAO.findOne(_id);
 
 		if (!theVault) throw {
 			status: STATUS.NOT_FOUND_404,
